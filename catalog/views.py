@@ -15,10 +15,10 @@ def contacts(request):
     if request.method == 'POST':
 
         name = request.POST.get('name')
-        email = request.POST.get('email')
+        phone = request.POST.get('phone')
         message = request.POST.get('message')
 
-        print(f"Новое сообщение от пользователя {name} (email: {email}): {message}")
+        print(f"Новое сообщение от пользователя {name} (телефон: {phone}): {message}")
 
         context = {
             'success': True
