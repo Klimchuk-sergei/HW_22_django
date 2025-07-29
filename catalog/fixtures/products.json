@@ -1,0 +1,22 @@
+[
+  {
+    "model": "catalog.product",
+    "pk": 1,
+    "fields": {
+      "name": "Яблоко 'Голден'",
+      "description": "Сладкое и хрустящее яблоко.",
+      "category": 1,
+      "price": "150.00"
+    }
+  },
+  {
+    "model": "catalog.product",
+    "pk": 2,
+    "fields": {
+      "name": "Картофель 'Молодой'",
+      "description": "Идеально для жарки и варки.",
+      "category": 2,
+      "price": "80.50"
+    }
+  }
+]
