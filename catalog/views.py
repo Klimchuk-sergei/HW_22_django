@@ -1,13 +1,29 @@
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
+from .models import Product
 
-# catalog/views.py
 
-from django.shortcuts import render
+def product_detail(request, pk):
+    """контролер для страниц с информацией о товаре"""
+    product_item = get_object_or_404(Product, pk=pk)
+
+    context = {
+        'product': product_item,
+        'title': product_item.name
+    }
+    return render(request, 'catalog/product_detail.html', context)
 
 
 def home(request):
-
-    return render(request, 'home.html')
+    """
+    Контроллер для главной страницы.
+    Получает все продукты и передает их в шаблон.
+    """
+    product_list = Product.objects.all()
+    context = {
+        'products': product_list,
+        'title': 'Главная страница'
+    }
+    return render(request, 'catalog/home.html', context)
 
 
 def contacts(request):
