@@ -40,6 +40,6 @@ def contacts(request):
             'success': True
         }
 
-        return render(request, 'contacts.html', context)
+        return render(request, 'catalog/contacts.html', context)
 
-    return render(request, 'contacts.html')
+    return render(request, 'catalog/contacts.html')
