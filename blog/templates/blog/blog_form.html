@@ -1,0 +1,20 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-8 mx-auto">
+            <!-- Заголовок меняется в зависимости от того, создаем мы или редактируем -->
+            <h2>{% if object %}Редактировать статью{% else %}Создать новую статью{% endif %}</h2>
+            <hr>
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                
+                <button type="submit" class="btn btn-primary mt-3">Сохранить</button>
+                <a href="{% url 'blog:list' %}" class="btn btn-secondary mt-3">Отмена</a>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
