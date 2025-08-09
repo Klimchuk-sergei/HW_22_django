@@ -1,45 +1,54 @@
-from django.shortcuts import render, get_object_or_404
+from django.views.generic import ListView, DetailView, TemplateView
 from .models import Product
 
 
-def product_detail(request, pk):
-    """контролер для страниц с информацией о товаре"""
-    product_item = get_object_or_404(Product, pk=pk)
-
-    context = {
-        'product': product_item,
-        'title': product_item.name
-    }
-    return render(request, 'catalog/product_detail.html', context)
-
-
-def home(request):
+class ProductListView(ListView):
     """
-    Контроллер для главной страницы.
-    Получает все продукты и передает их в шаблон.
+    Контроллер для отображения списка всех продуктов (Главная страница).
     """
-    product_list = Product.objects.all()
-    context = {
-        'products': product_list,
-        'title': 'Главная страница'
-    }
-    return render(request, 'catalog/home.html', context)
+    model = Product
+    template_name = 'catalog/home.html'
+    context_object_name = 'products'
+
+    def get_context_data(self, **kwargs):
+        # Добавляем title в контекст для базового шаблона
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Главная страница'
+        return context
 
 
-def contacts(request):
+class ProductDetailView(DetailView):
+    """
+    Контроллер для отображения детальной информации о продукте.
+    """
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
 
-    if request.method == 'POST':
+    def get_context_data(self, **kwargs):
+        # Добавляем title в контекст, используя имя продукта
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.object.name
+        return context
 
+
+class ContactsView(TemplateView):
+    """
+    Контроллер для страницы контактов.
+    """
+    template_name = 'catalog/contacts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Контакты'
+        return context
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         message = request.POST.get('message')
+        print(f"Новое сообщение от {name} (телефон: {phone}): {message}")
 
-        print(f"Новое сообщение от пользователя {name} (телефон: {phone}): {message}")
-
-        context = {
-            'success': True
-        }
-
-        return render(request, 'catalog/contacts.html', context)
-
-    return render(request, 'catalog/contacts.html')
+        context = self.get_context_data()
+        context['success'] = True
+        return self.render_to_response(context)
