@@ -1,29 +1,54 @@
-from django.shortcuts import render
-
-# catalog/views.py
-
-from django.shortcuts import render
+from django.views.generic import ListView, DetailView, TemplateView
+from .models import Product
 
 
-def home(request):
+class ProductListView(ListView):
+    """
+    Контроллер для отображения списка всех продуктов (Главная страница).
+    """
+    model = Product
+    template_name = 'catalog/home.html'
+    context_object_name = 'products'
 
-    return render(request, 'home.html')
+    def get_context_data(self, **kwargs):
+        # Добавляем title в контекст для базового шаблона
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Главная страница'
+        return context
 
 
-def contacts(request):
+class ProductDetailView(DetailView):
+    """
+    Контроллер для отображения детальной информации о продукте.
+    """
+    model = Product
+    template_name = 'catalog/product_detail.html'
+    context_object_name = 'product'
 
-    if request.method == 'POST':
+    def get_context_data(self, **kwargs):
+        # Добавляем title в контекст, используя имя продукта
+        context = super().get_context_data(**kwargs)
+        context['title'] = self.object.name
+        return context
 
+
+class ContactsView(TemplateView):
+    """
+    Контроллер для страницы контактов.
+    """
+    template_name = 'catalog/contacts.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['title'] = 'Контакты'
+        return context
+
+    def post(self, request, *args, **kwargs):
         name = request.POST.get('name')
         phone = request.POST.get('phone')
         message = request.POST.get('message')
+        print(f"Новое сообщение от {name} (телефон: {phone}): {message}")
 
-        print(f"Новое сообщение от пользователя {name} (телефон: {phone}): {message}")
-
-        context = {
-            'success': True
-        }
-
-        return render(request, 'contacts.html', context)
-
-    return render(request, 'contacts.html')
+        context = self.get_context_data()
+        context['success'] = True
+        return self.render_to_response(context)
