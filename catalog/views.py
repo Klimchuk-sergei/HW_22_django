@@ -1,5 +1,9 @@
-from django.views.generic import ListView, DetailView, TemplateView
+from django.urls import reverse_lazy
+from django.views.generic import (
+    ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView
+)
 from .models import Product
+from .forms import ProductForm
 
 
 class ProductListView(ListView):
@@ -11,7 +15,6 @@ class ProductListView(ListView):
     context_object_name = 'products'
 
     def get_context_data(self, **kwargs):
-        # Добавляем title в контекст для базового шаблона
         context = super().get_context_data(**kwargs)
         context['title'] = 'Главная страница'
         return context
@@ -26,7 +29,6 @@ class ProductDetailView(DetailView):
     context_object_name = 'product'
 
     def get_context_data(self, **kwargs):
-        # Добавляем title в контекст, используя имя продукта
         context = super().get_context_data(**kwargs)
         context['title'] = self.object.name
         return context
@@ -52,3 +54,32 @@ class ContactsView(TemplateView):
         context = self.get_context_data()
         context['success'] = True
         return self.render_to_response(context)
+
+
+class ProductCreateView(CreateView):
+    """
+    Контроллер для создания нового продукта.
+    """
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('catalog:home')
+
+
+class ProductUpdateView(UpdateView):
+    """
+    Контроллер для редактирования существующего продукта.
+    """
+    model = Product
+    form_class = ProductForm
+    template_name = 'catalog/product_form.html'
+    success_url = reverse_lazy('catalog:home')
+
+
+class ProductDeleteView(DeleteView):
+    """
+    Контроллер для удаления продукта.
+    """
+    model = Product
+    template_name = 'catalog/product_confirm_delete.html'
+    success_url = reverse_lazy('catalog:home')

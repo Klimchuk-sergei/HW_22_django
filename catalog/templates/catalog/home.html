@@ -13,7 +13,8 @@
             </div>
             <div class="card-body">
                 <p>{{ product.description|truncatechars:100 }}</p>
-                <a href="{% url 'catalog:product_detail' product.pk %}" class="w-100 btn btn-lg btn-outline-primary">Подробнее<</a>
+                <a href="{% url 'catalog:product_detail' product.pk %}" class="w-100 btn btn-lg btn-outline-primary mb-3">Подробнее<</a>
+                <a href="{% url 'catalog:product_create' %}" class="btn btn-primary mb-3 mt-3">Добавить продукт</a>
             </div>
         </div>
     </div>
