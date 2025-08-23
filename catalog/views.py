@@ -4,6 +4,7 @@ from django.views.generic import (
 )
 from .models import Product
 from .forms import ProductForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class ProductListView(ListView):
@@ -20,7 +21,7 @@ class ProductListView(ListView):
         return context
 
 
-class ProductDetailView(DetailView):
+class ProductDetailView(LoginRequiredMixin, DetailView):
     """
     Контроллер для отображения детальной информации о продукте.
     """
@@ -56,7 +57,7 @@ class ContactsView(TemplateView):
         return self.render_to_response(context)
 
 
-class ProductCreateView(CreateView):
+class ProductCreateView(LoginRequiredMixin, CreateView):
     """
     Контроллер для создания нового продукта.
     """
@@ -66,7 +67,7 @@ class ProductCreateView(CreateView):
     success_url = reverse_lazy('catalog:home')
 
 
-class ProductUpdateView(UpdateView):
+class ProductUpdateView(LoginRequiredMixin, UpdateView):
     """
     Контроллер для редактирования существующего продукта.
     """
@@ -76,7 +77,7 @@ class ProductUpdateView(UpdateView):
     success_url = reverse_lazy('catalog:home')
 
 
-class ProductDeleteView(DeleteView):
+class ProductDeleteView(LoginRequiredMixin, DeleteView):
     """
     Контроллер для удаления продукта.
     """
