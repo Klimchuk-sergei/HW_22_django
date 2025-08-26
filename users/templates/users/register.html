@@ -1,0 +1,14 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6 mx-auto">
+        <h2 class="text-center">Регистрация</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
