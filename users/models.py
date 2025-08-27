@@ -1,5 +1,6 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from .managers import UserManager
 
 # Create your models here.
 
@@ -11,8 +12,9 @@ class User(AbstractUser):
     avatar = models.ImageField(upload_to='users_avatars/', verbose_name='avatar', blank=True, null=True)
 
     USERNAME_FIELD = 'email'
-
     REQUIRED_FIELDS = []
+
+    objects = UserManager()
 
     class Meta:
         verbose_name = 'user'
