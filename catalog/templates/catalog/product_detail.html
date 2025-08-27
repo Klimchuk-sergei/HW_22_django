@@ -11,13 +11,39 @@
     </div>
     <div class="col-md-6">
         <h1>{{ product.name }}</h1>
-        <p class="text-muted">Категория: {{ product.category.name }}</p>
+
+        {% if product.is_published %}
+            <span class="badge bg-success">Опубликовано</span>
+        {% else %}
+            <span class="badge bg-warning text-dark">На модерации</span>
+        {% endif %}
+
+        <p class="text-muted mt-2">Категория: {{ product.category.name }}</p>
         <h3>{{ product.price }} руб.</h3>
         <hr>
         <p>{{ product.description }}</p>
-        <a href="{% url 'catalog:home' %}" class="btn btn-primary mt-3">Назад к списку</a>
-        <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-warning mt-3">Редактировать</a>
-        <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger mt-3">Удалить</a>
+
+        <div class="mt-4">
+
+            <!-- Кнопка "Назад" видна всем -->
+            <a href="{% url 'catalog:home' %}" class="btn btn-primary">Назад к списку</a>
+
+            <!-- Кнопка "Редактировать" видна ТОЛЬКО ВЛАДЕЛЬЦУ -->
+            {% if user == product.owner %}
+                <a href="{% url 'catalog:product_update' product.pk %}" class="btn btn-warning">Редактировать</a>
+            {% endif %}
+
+            <!-- Кнопка "Удалить" видна ВЛАДЕЛЬЦУ ИЛИ МОДЕРАТОРУ -->
+            {% if user == product.owner or perms.catalog.delete_product %}
+                <a href="{% url 'catalog:product_delete' product.pk %}" class="btn btn-danger">Удалить</a>
+            {% endif %}
+
+            <!-- Кнопка "Отменить публикацию" видна ТОЛЬКО МОДЕРАТОРУ и только если продукт опубликован -->
+            {% if perms.catalog.can_unpublish_product and product.is_published %}
+                <a href="{% url 'catalog:product_unpublish' product.pk %}" class="btn btn-secondary">Отменить публикацию</a>
+            {% endif %}
+
+        </div>
     </div>
 </div>
 {% endblock %}
