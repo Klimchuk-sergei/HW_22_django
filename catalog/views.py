@@ -6,7 +6,7 @@ from .forms import ProductForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.views.generic import View
-from services import get_products_by_category
+from .services import get_products_by_category
 from .services import get_cached_categories
 
 
