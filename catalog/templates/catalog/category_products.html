@@ -1,0 +1,27 @@
+{% extends 'catalog/base.html' %}
+
+{% block content %}
+<div  class="pricing-header p-3 pb-md-4 mx-auto text-center">
+    <h1 class="display-4 fw-normal">Товары категории "{{ category.name }}"</h1>h1>
+</div>
+<div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    {% for product in products %}
+    <div class="col">
+        <div class="card mb-4 rounded-3 shadow-sm h-100">
+            <div class="card-header py-3">
+                <h4 class="my-0 fw-normal">{{ product.name }}</h4>
+            </div>
+            <div class="card-body">
+                <p>{{ product.description|truncatechars:100 }}</p>
+                <a href="{% url 'catalog:product_detail' product.pk %}" class="w-100 btn btn-lg btn-outline-primary">Подробнее</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <p>В этой категории пока нет товаров.</p>
+    </div>
+    {% endfor %}
+</div>>
+<a href="/" class="btn btn-secondary">Назад ко всем товарам</a>
+{% endblock %}

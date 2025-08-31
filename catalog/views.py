@@ -1,11 +1,13 @@
 from django.shortcuts import get_object_or_404, redirect
 from django.urls import reverse_lazy
 from django.views.generic import (ListView, DetailView, CreateView, UpdateView, DeleteView, TemplateView)
-from .models import Product
+from .models import Product, Category
 from .forms import ProductForm
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin, PermissionRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.views.generic import View
+from .services import get_products_by_category
+from .services import get_cached_categories
 
 
 class ProductListView(ListView):
@@ -19,6 +21,7 @@ class ProductListView(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['title'] = 'Главная страница'
+        context['categories'] = get_cached_categories()
         return context
 
 
@@ -118,3 +121,22 @@ class ProductUnpublishView(LoginRequiredMixin, PermissionRequiredMixin, View):
         product.is_published = False
         product.save()
         return redirect('catalog:product_detail', pk=pk)
+
+
+class CategoryProductListView(ListView):
+    """Отображение списков продуктов определенной категории"""
+    model = Product
+    template_name = 'catalog/category_products.html'
+    context_object_name = 'products'
+
+    def get_queryset(self):
+        category_pk = self.kwargs.get('pk')
+        queryset = get_products_by_category(category_pk)
+        return queryset
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        category_pk = self.kwargs.get('pk')
+        context['category'] = get_object_or_404(Category, pk=category_pk)
+        context['title'] = f"Товаары категории: {context['category'].name}"
+        return context
